@@ -1,24 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+
+import Home from "./components/Home";
+import Header from "./components/Header";
+import NotFound from "./components/NotFound";
+import Shop from "./components/Shop";
+import About from "./components/About";
+import Cart from "./components/Cart";
+import ShopItem from "./components/ShopItem";
 
 function App() {
+  const [cartItems, setCartItems] = useState([]);
+
+  const addToCart = (newItem) => {
+    setCartItems(cartItems.concat(newItem));
+    console.log(cartItems);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <div className="mainContainer">
+        <Header />
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route exact path="/about" component={About} />
+          <Route exact path="/shop" component={Shop} />
+          <Route
+            path="/shop/:id"
+            render={() => {
+              return <ShopItem addToCart={addToCart} />;
+            }}
+          />
+          <Route path="*" component={NotFound} />
+        </Switch>
+        <Cart cartItems={cartItems} />
+      </div>
+    </BrowserRouter>
   );
 }
 
